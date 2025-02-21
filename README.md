@@ -12,7 +12,7 @@ python setup.py sdist bdist_wheel
 ```pycon
 sphinx-quickstart
 ```
-- PyInstaller (双击运行)
+- PyInstaller (双击运行，需要虚拟环境安装)
 ```pycon
 pyinstaller --onefile --windowed doc_to_excel.py
 pyinstaller --hidden-import=win32com --hidden-import=win32com.client doc_to_excel.py
