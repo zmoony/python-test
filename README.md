@@ -134,3 +134,66 @@ pip_switch tsinghua install <package_name>
 pip_switch official install <package_name>
 
 ```
+
+### 离线开发运行
+
+1. 本地在线下载
+```pycon
+# 在线时运行
+pip download -r requirements.txt -d ./offline_packages
+```
+或者创建 wheel 文件（.whl），然后在离线环境中安装这些文件。
+```pycon
+# 在线时运行
+pip wheel --wheel-dir=./offline_packages -r requirements.txt
+```
+2. 离线运行
+```pycon
+pip install --no-index --find-links=./offline_packages -r requirements.txt
+pip install --no-index --find-links=./offline_packages package_name
+```
+3. 使用虚拟环境
+创建一个虚拟环境并在其中安装所有依赖项，这样可以确保你的开发环境是独立且一致的。
+```pycon
+# 在线时运行
+python -m venv myenv
+source myenv/bin/activate  # Linux/MacOS
+myenv\Scripts\activate     # Windows
+
+pip install -r requirements.txt
+
+```
+然后将整个虚拟环境复制到离线机器上。
+
+4. 使用docker
+使用 Docker 容器来创建一个包含所有依赖项的开发环境。你可以在线时构建 Docker 镜像，然后将其导出并导入到离线环境中。
+```bash
+# 构建镜像
+docker build -t my-python-env .
+
+# 导出镜像
+docker save -o my-python-env.tar my-python-env
+
+# 在离线环境中导入镜像
+docker load -i my-python-env.tar
+
+```
+5. 示例
+```bash
+# 下载依赖
+ pip download -r requirements.txt -d ./offline_packages
+# 创建虚拟环境，并安装依赖
+ python -m venv myenv
+ source myenv/bin/activate  # Linux/MacOS
+ myenv\Scripts\activate     # Windows
+ pip install -r requirements.txt
+ 
+# 离线使用
+# 将 myenv 目录和 offline_packages 目录复制到离线机器。
+# 激活虚拟环境并安装依赖
+ source myenv/bin/activate  # Linux/MacOS
+ myenv\Scripts\activate     # Windows
+ pip install --no-index --find-links=./offline_packages -r requirements.txt
+
+```
+
