@@ -161,6 +161,9 @@ source myenv/bin/activate  # Linux/MacOS
 myenv\Scripts\activate     # Windows
 
 pip install -r requirements.txt
+# 离线使用
+pip3 install --no-index --find-links=/home/user/packages requests
+python3 file_operations.py
 
 ```
 然后将整个虚拟环境复制到离线机器上。
@@ -179,6 +182,10 @@ docker load -i my-python-env.tar
 
 ```
 5. 示例
+5.1. 在线把包下载到一个离线的文件夹中
+5.2. 文件在拷贝到宿主机
+5.3. 离线安装依赖包
+5.4  运行py文件
 ```bash
 # 下载依赖
  pip download -r requirements.txt -d ./offline_packages
@@ -187,13 +194,31 @@ docker load -i my-python-env.tar
  source myenv/bin/activate  # Linux/MacOS
  myenv\Scripts\activate     # Windows
  pip install -r requirements.txt
+ # 创建一个目录来存放离线包
+mkdir offline_packages
+# 下载所有依赖包及其依赖项到 offline_packages 目录
+pip download -r requirements.txt -d ./offline_packages
+
+ 
  
 # 离线使用
 # 将 myenv 目录和 offline_packages 目录复制到离线机器。
 # 激活虚拟环境并安装依赖
+ python -m venv myenv
  source myenv/bin/activate  # Linux/MacOS
  myenv\Scripts\activate     # Windows
  pip install --no-index --find-links=./offline_packages -r requirements.txt
+ # 复制虚拟环境和依赖包
+ # 从有网络的环境复制到宿主机
+scp -r myenv user@host:/home/user/my_project
+scp -r offline_packages user@host:/home/user/my_project
+# 激活虚拟环境
+source /home/user/my_project/myenv/bin/activate  # Linux/MacOS
+/home/user/my_project/myenv/Scripts/activate     # Windows
+
+# 安装离线依赖包
+pip install --no-index --find-links=/home/user/my_project/offline_packages -r /home/user/my_project/requirements.txt
+
 
 ```
 
